@@ -44,7 +44,7 @@ class RedactingFormatter(logging.Formatter):
 def get_logger() -> logging.Logger:
     """ returns a logging.Logger object """
     logger = logging.getLogger("user_data")
-    logger.setL(logging.INFO)
+    logger.setLevel(logging.INFO)
     logger.propergate = False
     streamhandler = logging.StreamHandler()
     streamhandler.setFormatter(RedactingFormatter(PII_FIELDS))
@@ -59,7 +59,6 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     pwd = os.getenv("PERSONAL_DATA_DB_PASSWORD", "")
     db = os.getenv("PERSONAL_DATA_DB_NAME")
     host = os.getenv("PERSONAL_DATA_DB_HOST", "localhost")
-    print(user, pwd, db, host)
 
     return mysql.connector.connect(host=host, user=user, password=pwd, db=db)
 
@@ -70,10 +69,14 @@ def main():
 
     db = get_db()
     logger = get_logger()
-    with db.coursor() as coursor:
-        coursor.execute("SELECT * FROM users;")
-        users = coursor.fetchall()
-        print(users)
+    with db.cursor(dictionary=True) as cursor:
+        cursor.execute("SELECT * FROM users;")
+       
+        users = cursor.fetchall()
+        for user in users:
+            message = '; '.join(map(lambda x: "{}={}".format(x[0], x[1]), user.items())) + ';'
+            rec_log = logging.LogRecord("user_data", 20, None, None, message, None, None)
+            logger.handle(rec_log)
 
 if __name__ == "__main__":
     main()
