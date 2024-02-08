@@ -62,3 +62,18 @@ def get_db() -> mysql.connector.connection.MySQLConnection:
     print(user, pwd, db, host)
 
     return mysql.connector.connect(host=host, user=user, password=pwd, db=db)
+
+
+def main():
+    """ retrieve all rows in the users table and
+    display each row under a filtered format like this"""
+
+    db = get_db()
+    logger = get_logger()
+    with db.coursor() as coursor:
+        coursor.execute("SELECT * FROM users;")
+        users = coursor.fetchall()
+        print(users)
+
+if __name__ == "__main__":
+    main()
