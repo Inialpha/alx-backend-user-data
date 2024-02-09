@@ -71,12 +71,15 @@ def main():
     logger = get_logger()
     with db.cursor(dictionary=True) as cursor:
         cursor.execute("SELECT * FROM users;")
-       
+
         users = cursor.fetchall()
         for user in users:
-            message = '; '.join(map(lambda x: "{}={}".format(x[0], x[1]), user.items())) + ';'
-            rec_log = logging.LogRecord("user_data", 20, None, None, message, None, None)
+            message = '; '.join(
+                map(lambda x: "{}={}".format(x[0], x[1]), user.items())) + ';'
+            rec_log = logging.LogRecord(
+                "user_data", 20, None, None, message, None, None)
             logger.handle(rec_log)
+
 
 if __name__ == "__main__":
     main()
