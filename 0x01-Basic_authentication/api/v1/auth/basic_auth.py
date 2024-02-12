@@ -5,6 +5,7 @@ import base64
 import binascii
 from typing import TypeVar
 
+
 class BasicAuth(Auth):
     """ BasicAuth class """
 
