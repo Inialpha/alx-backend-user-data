@@ -33,19 +33,22 @@ def not_found(error) -> str:
 def not_authorized(error) -> str:
     """ Not authorized handler """
     return jsonify({"error": "Unauthorized"}), 401
+
+
 @app.errorhandler(403)
 def forbidden(error) -> str:
     """ Forbidden handler """
 
     return jsonify({"error": "Forbidden"}), 403
 
+
 @app.before_request
 def before():
     """ check for authentication """
     if auth:
         excluded_path = ['/api/v1/status/',
-                '/api/v1/unauthorized/',
-                '/api/v1/forbidden/']
+                         '/api/v1/unauthorized/',
+                         '/api/v1/forbidden/']
         print(request.path)
         if auth.require_auth(request.path, excluded_path):
             if not auth.authorization_header(request):
