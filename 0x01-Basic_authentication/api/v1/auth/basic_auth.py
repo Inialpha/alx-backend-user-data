@@ -54,7 +54,11 @@ class BasicAuth(Auth):
         """ user object from credentials """
         from models.user import User
         if isinstance(user_pwd, str) and isinstance(user_email, str):
-            user = User.search({'email': user_email})[0]
-            if user.is_valid_password(user_pwd):
-                return user
+            try:
+                users = User.search({'email': user_email})
+            except KeyError:
+                return None
+            if len(users) > 0:
+                if users[0].is_valid_password(user_pwd):
+                    return users[0]
         return None
