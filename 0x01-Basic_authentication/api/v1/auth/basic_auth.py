@@ -28,7 +28,6 @@ class BasicAuth(Auth):
         if base64_authorization_header is None or not isinstance(
                 base64_authorization_header, str):
             return None
-
         try:
             res = base64.b64decode(base64_authorization_header, validate=True)
             return res.decode('utf-8')
@@ -62,3 +61,13 @@ class BasicAuth(Auth):
                 if users[0].is_valid_password(user_pwd):
                     return users[0]
         return None
+
+    def current_user(self, request=None) -> TypeVar('User'):
+        """ current_user """
+
+        auth_header = self.authorization_header(request)
+        auth_string = self.extract_base64_authorization_header(auth_header)
+        auth_decoded = self.decode_base64_authorization_header(auth_string)
+        email, pwd = self.extract_user_credentials(auth_decoded)
+        user = self.user_object_from_credentials(email, pwd)
+        return user
