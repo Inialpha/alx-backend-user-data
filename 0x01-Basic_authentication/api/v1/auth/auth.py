@@ -17,7 +17,7 @@ class Auth:
                 path = path + "/*"
                 # print(path, excluded_path)
 
-                if re.match(path, excluded_path):
+                if re.match(excluded_path, path):
                     return False
 
         return True
