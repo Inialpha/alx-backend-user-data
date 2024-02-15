@@ -10,7 +10,7 @@ from api.v1.views import app_views
 def login():
     """ auth session """
     email = request.form.get('email', None)
-    if not email or len(email.strip())  == 0:
+    if not email or len(email.strip()) == 0:
         return jsonify({"error": "email missing"}), 400
     pwd = request.form.get('password', "")
     if pwd == "" or len(pwd.strip()) == 0:
@@ -38,6 +38,6 @@ def login():
 def delete():
     """ delete a session """
     from api.v1.app import auth
-    if auth.destroy_session(request) == False:
+    if auth.destroy_session(request) is False:
         abort(404)
     return jsonify({})
