@@ -10,8 +10,10 @@ class SessionExpAuth(SessionAuth):
 
     def __init__(self):
         """ initialize method """
-
-        self.session_duration = int(os.getenv('SESSION_DURATION'))
+        try:
+            self.session_duration = int(os.getenv('SESSION_DURATION'))
+        except (TypeError, ValueError):
+            self.session_duration = 0
 
     def create_session(self, user_id=None):
         """ create session """
