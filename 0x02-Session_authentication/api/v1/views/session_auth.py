@@ -11,14 +11,14 @@ def login():
     """ auth session """
     email = request.form.get('email', None)
     if not email or len(email.strip())  == 0:
-        return jsonify({"error": "email missing"}) 400
+        return jsonify({"error": "email missing"}), 400
     pwd = request.form.get('password', "")
     if pwd == "" or len(pwd.strip()) == 0:
         return jsonify({"error": "password missing"}), 400
     try:
         users = User.search({'email': email})
     except Exception:
-        return jsonify({"error": "no user found for this email"}) 404
+        return jsonify({"error": "no user found for this email"}), 404
     if len(users) > 0:
         user = users[0]
     else:
