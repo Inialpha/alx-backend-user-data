@@ -14,19 +14,19 @@ def index():
 
 
 @app.route('/users', strict_slashes=False, methods=["POST"])
-def users():
+def users() -> str:
     """ register a new user """
     email = request.form.get('email')
     pwd = request.form.get('password')
     try:
         AUTH.register_user(email, pwd)
-        return jsonify({"email": email, "message": "user created"}), 201
+        return jsonify({"email": email, "message": "user created"})
     except ValueError:
         return jsonify({"message": "email already registered"}), 400
 
 
 @app.route('/sessions', strict_slashes=False, methods=["POST"])
-def login():
+def login() -> str:
     """ login route """
     email = request.form.get('email')
     pwd = request.form.get('password')
@@ -45,7 +45,7 @@ def login():
 
 
 @app.route('/sessions', strict_slashes=False, methods=["DELETE"])
-def logout():
+def logout() -> str:
     """ destroy a session """
 
     session_id = request.cookies.get('session_id')
@@ -58,7 +58,7 @@ def logout():
 
 
 @app.route('/profile', strict_slashes=False, methods=["GET"])
-def profile():
+def profile() -> str:
     """ get profile """
     session_id = request.cookies.get('session_id')
     user = AUTH.get_user_from_session_id(session_id)
