@@ -79,17 +79,37 @@ def get_reset_password_token() -> str:
         abort(403)
 
 
-@app.route('/reset_password', strict_slashes=False, methods=["PUT"])
+@app.route("/reset_password", methods=["PUT"], strict_slashes=False)
 def update_password() -> str:
-    """ update password """
-    email = request.form.get('email')
-    reset_token = email = request.form.get('reset_token')
-    new_password = request.form.get('new_password')
+    """PUT /reset_password
+
+    Return:
+        - The user's password updated payload.
+    """
+    email = request.form.get("email")
+    reset_token = request.form.get("reset_token")
+    new_password = request.form.get("new_password")
+    is_password_changed = False
     try:
         AUTH.update_password(reset_token, new_password)
-        return jsonify({"email": email, "message": "Password updated"}), 200
+        is_password_changed = True
     except ValueError:
+        is_password_changed = False
+    if not is_password_changed:
         abort(403)
+    return jsonify({"email": email, "message": "Password updated"})
+
+#@app.route('/reset_password', strict_slashes=False, methods=["PUT"])
+#def update_password() -> str:
+#    """ update password """
+#    email = request.form.get('email')
+#    reset_token = email = request.form.get('reset_token')
+#    new_password = request.form.get('new_password')
+#    try:
+#        AUTH.update_password(reset_token, new_password)
+#        return jsonify({"email": email, "message": "Password updated"}), 200
+#    except ValueError:
+#        abort(403)
 
 
 if __name__ == "__main__":
