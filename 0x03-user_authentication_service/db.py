@@ -39,7 +39,7 @@ class DB:
         self._session.commit()
         return user
 
-    def find_user_by(self, *args: tuple, **kwargs: dict) -> User:
+    def find_user_by(self, **kwargs: dict) -> User:
         """ retrieve a user """
 
         for key, value in kwargs.items():
